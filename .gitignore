@@ -1,0 +1,17 @@
+# Data
+downloads/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# Claude Code (local settings are personal)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
