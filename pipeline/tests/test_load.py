@@ -31,9 +31,20 @@ def persons() -> pl.DataFrame:
 
 def test_votering_columns(votering_new: pl.DataFrame) -> None:
     expected = {
-        "riksmote", "beteckning", "votering_id", "punkt", "namn",
-        "intressent_id", "parti", "valkrets", "rost", "avser",
-        "votering_nummer", "kon", "fodd_ar", "datum",
+        "riksmote",
+        "beteckning",
+        "votering_id",
+        "punkt",
+        "namn",
+        "intressent_id",
+        "parti",
+        "valkrets",
+        "rost",
+        "avser",
+        "votering_nummer",
+        "kon",
+        "fodd_ar",
+        "datum",
     }
     assert set(votering_new.columns) == expected
 
@@ -114,6 +125,7 @@ def test_persons_tom_timestamp_truncated(persons: pl.DataFrame) -> None:
 
 def test_load_all_voteringar_concatenates(tmp_path: Path) -> None:
     import shutil
+
     shutil.copy(DATA_DIR / "votering_new.csv", tmp_path / "votering-202526.csv")
     shutil.copy(DATA_DIR / "votering_old.csv", tmp_path / "votering-19992000.csv")
     df = load_all_voteringar(tmp_path)
@@ -127,7 +139,9 @@ def test_load_all_voteringar_empty_dir_raises(tmp_path: Path) -> None:
         load_all_voteringar(tmp_path)
 
 
-@pytest.mark.skipif(not DOWNLOADS.exists(), reason="downloads/ not present in this checkout")
+@pytest.mark.skipif(
+    not DOWNLOADS.exists(), reason="downloads/ not present in this checkout"
+)
 def test_votering_all_sessions() -> None:
     df = load_all_voteringar(DOWNLOADS)
     sessions = set(df["riksmote"].unique().to_list())

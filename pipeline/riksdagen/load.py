@@ -6,20 +6,20 @@ import polars as pl
 
 # Canonical column order for all votering DataFrames.
 VOTERING_COLUMNS = [
-    "riksmote",       # "2025/26"
-    "beteckning",     # committee + number, e.g. "JuU22"
-    "votering_id",    # vote identifier
-    "punkt",          # sub-point within the proposition
-    "namn",           # member full name
+    "riksmote",  # "2025/26"
+    "beteckning",  # committee + number, e.g. "JuU22"
+    "votering_id",  # vote identifier
+    "punkt",  # sub-point within the proposition
+    "namn",  # member full name
     "intressent_id",  # member ID (links to person.csv Id column)
-    "parti",          # party abbreviation
-    "valkrets",       # constituency
-    "rost",           # Ja / Nej / Frånvarande / Avstår
-    "avser",          # sakfrågan / motivfrågan
+    "parti",  # party abbreviation
+    "valkrets",  # constituency
+    "rost",  # Ja / Nej / Frånvarande / Avstår
+    "avser",  # sakfrågan / motivfrågan
     "votering_nummer",
-    "kon",            # man / kvinna (older files use M / K)
-    "fodd_ar",        # birth year
-    "datum",          # vote date
+    "kon",  # man / kvinna (older files use M / K)
+    "fodd_ar",  # birth year
+    "datum",  # vote date
 ]
 
 # Pre-2002/03 files have a header row with different column names.
@@ -31,18 +31,26 @@ _OLD_COLUMN_MAP = {
 
 # Column names as they appear in the old-format header (before renaming).
 _OLD_VOTERING_COLUMNS = [
-    "rm", "beteckning", "punkt", "votering_id", "namn", "intressent_id",
-    "parti", "valkrets", "rost", "avser", "banknummer", "kon", "fodd", "datum",
+    "rm",
+    "beteckning",
+    "punkt",
+    "votering_id",
+    "namn",
+    "intressent_id",
+    "parti",
+    "valkrets",
+    "rost",
+    "avser",
+    "banknummer",
+    "kon",
+    "fodd",
+    "datum",
 ]
 
 # Explicit all-String schemas — we cast to final types in _normalize_votering
 # after handling "?" sentinels and other quirks that require string-level ops.
-_VOTERING_STRING_SCHEMA = {
-    col: pl.String for col in VOTERING_COLUMNS
-}
-_OLD_VOTERING_STRING_SCHEMA = {
-    col: pl.String for col in _OLD_VOTERING_COLUMNS
-}
+_VOTERING_STRING_SCHEMA = {col: pl.String for col in VOTERING_COLUMNS}
+_OLD_VOTERING_STRING_SCHEMA = {col: pl.String for col in _OLD_VOTERING_COLUMNS}
 
 PERSON_COLUMN_MAP = {
     "Förnamn": "fornamn",
@@ -66,9 +74,7 @@ PERSON_COLUMN_MAP = {
     "Tom": "tom",
 }
 
-_PERSON_STRING_SCHEMA = {
-    col: pl.String for col in PERSON_COLUMN_MAP
-}
+_PERSON_STRING_SCHEMA = {col: pl.String for col in PERSON_COLUMN_MAP}
 
 _BOM = b"\xef\xbb\xbf"  # UTF-8 BOM as bytes
 _STR_BOM = "\ufeff"  # UTF-8 BOM as str (U+FEFF)
@@ -89,9 +95,7 @@ def _strip_bom(df: pl.DataFrame) -> pl.DataFrame:
     """
     df = df.rename({col: col.lstrip(_STR_BOM) for col in df.columns})
     if "riksmote" in df.columns:
-        df = df.with_columns(
-            pl.col("riksmote").str.strip_chars(_STR_BOM)
-        )
+        df = df.with_columns(pl.col("riksmote").str.strip_chars(_STR_BOM))
     return df
 
 
