@@ -1,0 +1,20 @@
+sessions:
+  - "2022/23"
+  - "2023/24"
+  - "2024/25"
+  - "2025/26"
+
+min_votes: 50
+
+grid_width: 20
+grid_height: 14
+
+party_colors:
+  S: "#E8112d"   # Socialdemokraterna
+  M: "#52BDEC"   # Moderaterna
+  SD: "#DDDD00"  # Sverigedemokraterna
+  C: "#009933"   # Centerpartiet
+  V: "#AF0000"   # Vänsterpartiet
+  KD: "#231977"  # Kristdemokraterna
+  L: "#006AB3"   # Liberalerna
+  MP: "#83CF39"  # Miljöpartiet
