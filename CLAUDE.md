@@ -38,6 +38,22 @@ The API is open and requires no authentication. Key domains:
 Base URL: `https://data.riksdagen.se/`  
 API docs and data formats: https://www.riksdagen.se/sv/dokument-och-lagar/riksdagens-oppna-data/
 
+## GitHub CLI
+
+Always use `--json` when fetching issues or PRs with `gh issue view` / `gh pr view` to avoid a GraphQL error caused by Projects Classic deprecation:
+
+```
+gh issue view <number> --repo <owner/repo> --json title,body,labels
+gh pr view <number> --repo <owner/repo> --json title,body,state
+```
+
+Alternatively use the REST API directly:
+
+```
+gh api repos/<owner/repo>/issues/<number>
+gh api repos/<owner/repo>/pulls/<number>
+```
+
 ## Key algorithms
 
 - **Kohonen SOM**: hexagonal grid topology. Nodes represent clusters of similar voting behavior; members, parties, and topics can be projected onto the trained map.
