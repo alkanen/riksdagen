@@ -11,16 +11,24 @@ version = "0.1.0"
 description = "Data pipeline for Swedish parliament (Riksdagen) open data"
 requires-python = ">=3.10"
 dependencies = [
+    # Pinned to a minor-version range: train_som accesses private minisom
+    # attributes (_weights, _learning_rate, _sigma, decay functions) for the
+    # masked weight-update. A major or minor bump could rename or remove them.
+    "minisom>=2.3.6,<2.4",
+    "numpy>=2.2.6",
     "polars>=1.0",
     "pyyaml>=6.0.3",
+    "tqdm>=4.67.3",
 ]
 
 [dependency-groups]
 dev = [
+    "matplotlib>=3.10.9",
     "mypy>=1.0",
     "pytest>=8.0",
     "ruff>=0.5",
     "types-pyyaml>=6.0.12.20260518",
+    "types-tqdm>=4.67.3.20260518",
 ]
 
 [tool.ruff]
@@ -33,6 +41,10 @@ select = ["E", "F", "I", "UP"]
 [tool.mypy]
 strict = true
 python_version = "3.10"
+
+[[tool.mypy.overrides]]
+module = "minisom"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
