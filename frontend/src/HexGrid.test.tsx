@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import HexGrid from './HexGrid'
 import { NEUTRAL } from './colorMap'
 import type { GridData } from './types'
@@ -56,6 +57,100 @@ describe('HexGrid', () => {
   it('renders inside an SVG element', () => {
     const { container } = render(<HexGrid data={GRID_2X2} colorMode="party" />)
     expect(container.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('shows a pinned dialog with member name when a cell is clicked', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByText(/Anna/)).toBeInTheDocument()
+  })
+
+  it('focuses the close button when the pinned dialog opens', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('button', { name: /close/i })).toHaveFocus()
+  })
+
+  it('opens the pinned dialog when pressing Enter on a focused cell', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    screen.getByRole('button', { name: /Anna/ }).focus()
+    await userEvent.keyboard('{Enter}')
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('does not reopen the dialog when Enter is held down', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    screen.getByRole('button', { name: /Anna/ }).focus()
+    await userEvent.keyboard('{Enter>3/}')
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('dismisses the dialog when Escape is pressed', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('returns focus to the cell when the dialog is dismissed with Escape', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.click(cell)
+    await userEvent.keyboard('{Escape}')
+    expect(cell).toHaveFocus()
+  })
+
+  it('dismisses the dialog when clicking outside the grid', async () => {
+    render(
+      <div>
+        <HexGrid data={GRID_2X2} colorMode="party" />
+        <button type="button">Outside</button>
+      </div>,
+    )
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /outside/i }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('shows an ephemeral tooltip when hovering a cell', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.hover(screen.getByRole('button', { name: /Anna/ }))
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+  })
+
+  it('dismisses the tooltip when the mouse leaves the cell', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.hover(cell)
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+    await userEvent.unhover(cell)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  it('does not steal focus when Escape is pressed after the dialog is already closed', async () => {
+    render(
+      <div>
+        <HexGrid data={GRID_2X2} colorMode="party" />
+        <button type="button">Other</button>
+      </div>,
+    )
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.click(cell)
+    await userEvent.keyboard('{Escape}')
+    await userEvent.click(screen.getByRole('button', { name: /other/i }))
+    await userEvent.keyboard('{Escape}')
+    expect(screen.getByRole('button', { name: /other/i })).toHaveFocus()
+  })
+
+  it('keeps the pinned dialog visible when the mouse leaves after a click', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.click(cell)
+    await userEvent.unhover(cell)
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
 
   it('single-row grid has a narrower viewBox than a two-row grid of the same width', () => {

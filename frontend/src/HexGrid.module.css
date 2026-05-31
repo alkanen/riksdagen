@@ -1,7 +1,23 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .grid {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.cellGroup {
+  cursor: pointer;
+  outline: none;
+}
+
+.cellGroup:focus .cell,
+.cellGroup:focus-visible .cell {
+  stroke: #818cf8;
+  stroke-width: 2.5;
 }
 
 .cell {
@@ -10,6 +26,6 @@
   transition: opacity 0.15s ease;
 }
 
-.cell:hover {
+.cellGroup:hover .cell {
   opacity: 0.85;
 }
