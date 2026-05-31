@@ -21,3 +21,7 @@ Thumbs.db
 
 # Pipeline training artifacts
 pipeline/som_assignments.csv
+
+# Frontend build output and dependencies
+frontend/node_modules/
+frontend/dist/
