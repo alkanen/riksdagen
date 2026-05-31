@@ -1,0 +1,79 @@
+.tooltip {
+  position: fixed;
+  z-index: 100;
+  background: #13151f;
+  border: 1px solid #2a2d3e;
+  border-radius: 6px;
+  padding: 10px 12px;
+  min-width: 180px;
+  max-width: 280px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  font-size: 0.8125rem;
+  color: #c8cad6;
+  pointer-events: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.party {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #7c7f96;
+}
+
+.close {
+  background: none;
+  border: none;
+  color: #5a5d72;
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.close:hover {
+  color: #c8cad6;
+}
+
+.members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.members li {
+  line-height: 1.4;
+}
+
+.lowConfidence {
+  opacity: 0.65;
+}
+
+.partyTag {
+  color: #5a5d72;
+  font-size: 0.75rem;
+}
+
+.empty {
+  margin: 4px 0 0;
+  color: #5a5d72;
+  font-style: italic;
+}
+
+.legend {
+  margin: 8px 0 0;
+  font-size: 0.7rem;
+  color: #5a5d72;
+}

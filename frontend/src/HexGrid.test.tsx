@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import HexGrid from './HexGrid'
 import { NEUTRAL } from './colorMap'
 import type { GridData } from './types'
@@ -56,6 +57,34 @@ describe('HexGrid', () => {
   it('renders inside an SVG element', () => {
     const { container } = render(<HexGrid data={GRID_2X2} colorMode="party" />)
     expect(container.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('shows a tooltip with member name when a cell is clicked', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+    expect(screen.getByText(/Anna/)).toBeInTheDocument()
+  })
+
+  it('dismisses the tooltip when Escape is pressed', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  it('dismisses the tooltip when clicking outside the grid', async () => {
+    render(
+      <div>
+        <HexGrid data={GRID_2X2} colorMode="party" />
+        <button type="button">Outside</button>
+      </div>,
+    )
+    await userEvent.click(screen.getByTestId('cell-0-0'))
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /outside/i }))
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
   it('single-row grid has a narrower viewBox than a two-row grid of the same width', () => {
