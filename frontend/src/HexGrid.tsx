@@ -1,3 +1,4 @@
+import type React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import CellTooltip from './CellTooltip'
 import { buildColorMap } from './colorMap'
@@ -144,7 +145,7 @@ export default function HexGrid({ data, colorMode }: HexGridProps) {
       <svg
         viewBox={svgViewBox(width, height)}
         className={styles.grid}
-        role="img"
+        role="group"
         aria-label="Parliament member voting similarity grid"
       >
         {cells.map((cell) => (

@@ -87,6 +87,29 @@ describe('HexGrid', () => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
+  it('shows a tooltip when hovering a cell', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    await userEvent.hover(screen.getByRole('button', { name: /Anna/ }))
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+  })
+
+  it('dismisses the hover tooltip when the mouse leaves the cell', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.hover(cell)
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+    await userEvent.unhover(cell)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  it('keeps the pinned tooltip visible when the mouse leaves after a click', async () => {
+    render(<HexGrid data={GRID_2X2} colorMode="party" />)
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.click(cell)
+    await userEvent.unhover(cell)
+    expect(screen.getByRole('tooltip')).toBeInTheDocument()
+  })
+
   it('single-row grid has a narrower viewBox than a two-row grid of the same width', () => {
     const { container: one } = render(<HexGrid data={makeGrid(3, 1)} colorMode="party" />)
     const { container: two } = render(<HexGrid data={makeGrid(3, 2)} colorMode="party" />)
