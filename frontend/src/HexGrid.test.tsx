@@ -130,6 +130,21 @@ describe('HexGrid', () => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
+  it('does not steal focus when Escape is pressed after the dialog is already closed', async () => {
+    render(
+      <div>
+        <HexGrid data={GRID_2X2} colorMode="party" />
+        <button type="button">Other</button>
+      </div>,
+    )
+    const cell = screen.getByRole('button', { name: /Anna/ })
+    await userEvent.click(cell)
+    await userEvent.keyboard('{Escape}')
+    await userEvent.click(screen.getByRole('button', { name: /other/i }))
+    await userEvent.keyboard('{Escape}')
+    expect(screen.getByRole('button', { name: /other/i })).toHaveFocus()
+  })
+
   it('keeps the pinned dialog visible when the mouse leaves after a click', async () => {
     render(<HexGrid data={GRID_2X2} colorMode="party" />)
     const cell = screen.getByRole('button', { name: /Anna/ })

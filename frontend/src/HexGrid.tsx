@@ -115,23 +115,27 @@ export default function HexGrid({ data, colorMode }: HexGridProps) {
   function handleClose() {
     setTooltip(null)
     triggerRef.current?.focus()
+    triggerRef.current = null
   }
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setTooltip(null)
+      if (e.key !== 'Escape' || tooltip === null) return
+      setTooltip(null)
+      if (tooltip.pinned) {
         triggerRef.current?.focus()
+        triggerRef.current = null
       }
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [tooltip])
 
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setTooltip(null)
+        triggerRef.current = null
       }
     }
     document.addEventListener('mousedown', onMouseDown)
