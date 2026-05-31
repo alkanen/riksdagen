@@ -1,0 +1,32 @@
+.toggle {
+  display: flex;
+  gap: 4px;
+  background: #12141f;
+  border: 1px solid #2a2d3e;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #8b8fa8;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background: #1e2130;
+  color: #c8cad6;
+}
+
+.button.active {
+  background: #1e2130;
+  color: #e2e4ef;
+}
