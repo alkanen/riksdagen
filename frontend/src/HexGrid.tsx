@@ -37,7 +37,7 @@ interface HexCellProps {
   fill: string
   onHover: (cell: Cell, pos: Pos) => void
   onHoverEnd: () => void
-  onClick: (cell: Cell, pos: Pos) => void
+  onClick: (cell: Cell, pos: Pos, trigger: SVGGElement) => void
 }
 
 function HexCell({ cell, fill, onHover, onHoverEnd, onClick }: HexCellProps) {
@@ -50,13 +50,14 @@ function HexCell({ cell, fill, onHover, onHoverEnd, onClick }: HexCellProps) {
   }
 
   function handleClick(e: React.MouseEvent) {
-    onClick(cell, { x: e.clientX, y: e.clientY })
+    onClick(cell, { x: e.clientX, y: e.clientY }, e.currentTarget as SVGGElement)
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.repeat) return
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      onClick(cell, posFromRect())
+      onClick(cell, posFromRect(), e.currentTarget as SVGGElement)
     }
   }
 
@@ -99,6 +100,7 @@ interface HexGridProps {
 export default function HexGrid({ data, colorMode }: HexGridProps) {
   const [tooltip, setTooltip] = useState<TooltipState>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<SVGGElement | null>(null)
   const colorOf = buildColorMap(data, colorMode)
   const { width, height } = data.grid
 
@@ -110,9 +112,17 @@ export default function HexGrid({ data, colorMode }: HexGridProps) {
     }
   }
 
+  function handleClose() {
+    setTooltip(null)
+    triggerRef.current?.focus()
+  }
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') setTooltip(null)
+      if (e.key === 'Escape') {
+        setTooltip(null)
+        triggerRef.current?.focus()
+      }
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
@@ -136,7 +146,8 @@ export default function HexGrid({ data, colorMode }: HexGridProps) {
     setTooltip((prev) => (prev?.pinned ? prev : null))
   }
 
-  function handleClick(cell: Cell, pos: Pos) {
+  function handleClick(cell: Cell, pos: Pos, trigger: SVGGElement) {
+    triggerRef.current = trigger
     setTooltip({ cell, pos, pinned: true })
   }
 
@@ -160,7 +171,12 @@ export default function HexGrid({ data, colorMode }: HexGridProps) {
         ))}
       </svg>
       {tooltip !== null && (
-        <CellTooltip cell={tooltip.cell} pos={tooltip.pos} pinned={tooltip.pinned} onClose={() => setTooltip(null)} />
+        <CellTooltip
+          cell={tooltip.cell}
+          pos={tooltip.pos}
+          pinned={tooltip.pinned}
+          onClose={handleClose}
+        />
       )}
     </div>
   )

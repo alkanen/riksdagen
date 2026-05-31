@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import styles from './CellTooltip.module.css'
 import type { Cell } from './types'
 
@@ -10,19 +11,30 @@ interface CellTooltipProps {
 
 export default function CellTooltip({ cell, pos, pinned, onClose }: CellTooltipProps) {
   const hasLowConfidence = cell.members.some((m) => m.low_confidence)
+  const closeRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (pinned) closeRef.current?.focus()
+  }, [pinned])
 
   return (
     <div
-      role="dialog"
-      aria-modal="false"
-      aria-label="Cell members"
+      role={pinned ? 'dialog' : 'tooltip'}
+      aria-modal={pinned ? false : undefined}
+      aria-label={pinned ? 'Cell members' : undefined}
       className={styles.tooltip}
       style={{ left: pos.x + 12, top: pos.y + 12 }}
     >
       <div className={styles.header}>
         <span className={styles.party}>{cell.dominant_party ?? 'Empty'}</span>
         {pinned && (
-          <button type="button" aria-label="Close tooltip" className={styles.close} onClick={onClose}>
+          <button
+            ref={closeRef}
+            type="button"
+            aria-label="Close tooltip"
+            className={styles.close}
+            onClick={onClose}
+          >
             ×
           </button>
         )}
