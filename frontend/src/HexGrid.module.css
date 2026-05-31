@@ -1,0 +1,15 @@
+.grid {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.cell {
+  stroke: #0a0c14;
+  stroke-width: 1.5;
+  transition: opacity 0.15s ease;
+}
+
+.cell:hover {
+  opacity: 0.85;
+}
