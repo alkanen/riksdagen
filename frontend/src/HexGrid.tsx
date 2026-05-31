@@ -160,7 +160,7 @@ export default function HexGrid({ data, colorMode }: HexGridProps) {
         ))}
       </svg>
       {tooltip !== null && (
-        <CellTooltip cell={tooltip.cell} pos={tooltip.pos} onClose={() => setTooltip(null)} />
+        <CellTooltip cell={tooltip.cell} pos={tooltip.pos} pinned={tooltip.pinned} onClose={() => setTooltip(null)} />
       )}
     </div>
   )
