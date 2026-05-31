@@ -1,4 +1,4 @@
-.PHONY: test lint typecheck fmt check frontend-dev frontend-build frontend-test frontend-lint
+.PHONY: test lint typecheck fmt check pipeline frontend-dev frontend-build frontend-test frontend-lint
 
 # ── pipeline ──────────────────────────────────────────────────────────────────
 
@@ -19,10 +19,8 @@ fmt:
 check: lint typecheck test
 	cd pipeline && uv run ruff format --check .
 
-# ── stubs (uncomment once entry points exist) ─────────────────────────────────
-
-# pipeline:
-# 	cd pipeline && uv run riksdagen
+pipeline:
+	cd pipeline && uv run python -m riksdagen
 
 # ── frontend ──────────────────────────────────────────────────────────────────
 
