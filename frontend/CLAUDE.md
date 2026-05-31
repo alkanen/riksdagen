@@ -6,7 +6,7 @@ React + TypeScript SPA built with Vite. Visualises Riksdagen (Swedish parliament
 
 | Command | What it does |
 |---------|-------------|
-| `npm run dev` | Start dev server at http://localhost:5173 |
+| `npm run dev` | Start dev server at http://localhost:5173 (binds to all interfaces — see note below) |
 | `npm run build` | Type-check and produce static build in `dist/` |
 | `npm test` | Run Vitest suite once |
 | `npm run test:watch` | Vitest in watch mode |
@@ -33,9 +33,13 @@ Tests live next to their source file as `*.test.tsx`. Run with `npm test`.
 - Vitest globals (`describe`, `it`, `expect`) are available without imports.
 - `@testing-library/jest-dom` matchers (`toBeInTheDocument`, `toHaveTextContent`, etc.) are available via the setup file.
 
+## Dev server network binding
+
+`vite.config.ts` sets `server.host: true`, so the dev server listens on `0.0.0.0` (all interfaces) rather than loopback only. This is intentional for WSL2 development — it lets the Windows host reach the server at `http://localhost:5173` without port-proxy configuration. The trade-off is that the server is reachable by anyone on the same LAN, so avoid running it on untrusted networks.
+
 ## Pipeline JSON
 
-The pipeline exports `frontend/public/data.json` (run `uv run riksdagen` from the repo root). During development, Vite serves `public/` at the root, so `fetch('/data.json')` works in both dev and production.
+The pipeline exports `frontend/public/data.json` (run `make pipeline` from the repo root). `data.json` is gitignored — generate it locally before starting the dev server. During development, Vite serves `public/` at the root, so `fetch('/data.json')` works in both dev and production.
 
 Schema:
 
