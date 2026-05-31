@@ -1,4 +1,4 @@
-.PHONY: test lint typecheck fmt check
+.PHONY: test lint typecheck fmt check frontend-dev frontend-build frontend-test frontend-lint
 
 # ── pipeline ──────────────────────────────────────────────────────────────────
 
@@ -24,13 +24,16 @@ check: lint typecheck test
 # pipeline:
 # 	cd pipeline && uv run riksdagen
 
-# ── frontend (stubs — fill in once tooling is settled) ────────────────────────
+# ── frontend ──────────────────────────────────────────────────────────────────
 
-# frontend-dev:
-# 	cd frontend && npm run dev
+frontend-dev:
+	cd frontend && npm run dev
 
-# frontend-build:
-# 	cd frontend && npm run build
+frontend-build:
+	cd frontend && npm run build
 
-# frontend-test:
-# 	cd frontend && npm test
+frontend-test:
+	cd frontend && npm test
+
+frontend-lint:
+	cd frontend && npm run lint
